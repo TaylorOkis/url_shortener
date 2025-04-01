@@ -4,9 +4,9 @@ import app from "../src/app";
 import { describe, expect, test } from "@jest/globals";
 
 describe("URL Shortener API", () => {
-  test("POST /shorten --> short form of url", async () => {
+  test("POST /url/shorten --> short form of url", async () => {
     return request(app)
-      .post("/shorten")
+      .post("/url/shorten")
       .expect("Content-Type", /json/)
       .expect(201)
       .then((response) =>
@@ -16,11 +16,8 @@ describe("URL Shortener API", () => {
       );
   });
 
-  test("GET /{short_url_code} --> redirect to the long url", async () => {
-    return request(app)
-      .get("/{short_url_code}")
-      .expect("Content-Type", /json/)
-      .expect(302);
+  test("GET /url/{short_url_code} --> redirect to the long url", async () => {
+    return request(app).get("/url/YmejsfUUdkf3").expect(302);
   });
 
   test("GET /{invalid_short_url_code} ---> 404 if not found", async () => {
