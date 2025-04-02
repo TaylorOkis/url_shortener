@@ -9,8 +9,6 @@ const generateURL = async (req: Request, res: Response) => {
 
   let uniqueCode = nanoid();
 
-  console.log(uniqueCode);
-
   res
     .status(StatusCodes.CREATED)
     .json({ short_url: `https://localhost:5000/${uniqueCode}` });

@@ -3,6 +3,8 @@ import app from "../src/app";
 
 import { describe, expect, test } from "@jest/globals";
 
+jest.mock("nanoid");
+
 describe("URL Shortener API", () => {
   test("POST /url/shorten --> short form of url", async () => {
     return request(app)
