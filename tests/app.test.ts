@@ -5,7 +5,7 @@ import { describe, expect, test } from "@jest/globals";
 
 const body = {
   long_url:
-    "https://medium.com/@sandeep4.verma/system-design-scalable-url-shortener-service-like-tinyurl-106f30f23a82",
+    "https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly",
 };
 
 jest.mock("nanoid");
@@ -29,10 +29,10 @@ describe("URL Shortener API", () => {
   });
 
   test("testing getting long url and redirecting", async () => {
-    return request(app).get("/url/NxH-IY1SQ").expect(302);
+    return request(app).get("/url/1CtismLql").expect(302);
   });
 
   test("testing requesting for invalid short url", async () => {
-    return request(app).get("/url/aaabbb").expect(404);
+    return request(app).get("/url/NxH-IY1SQ").expect(404);
   });
 });
