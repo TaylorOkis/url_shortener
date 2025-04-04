@@ -3,17 +3,24 @@ import app from "../src/app";
 
 import { describe, expect, test } from "@jest/globals";
 
+const body = {
+  long_url: "https://localhost:5000/20234kdfowfj2lsfdlj",
+};
+
 jest.mock("nanoid");
 
 describe("URL Shortener API", () => {
   test("POST /url/shorten --> short form of url", async () => {
     return request(app)
       .post("/url/shorten")
+      .send(body)
       .expect("Content-Type", /json/)
       .expect(201)
       .then((response) =>
         expect(response.body).toEqual(
-          expect.objectContaining({ short_url: expect.any(String) })
+          expect.objectContaining({
+            short_url: `https://localhost:5000/mockedID`,
+          })
         )
       );
   });

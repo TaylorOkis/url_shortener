@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { customAlphabet } from "nanoid";
+import { validationResult } from "express-validator";
+import { UnprocessableEntityError } from "@/utils/error";
 
 const generateURL = async (req: Request, res: Response) => {
   const characters =

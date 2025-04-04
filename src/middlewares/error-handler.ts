@@ -1,9 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { Request, Response, NextFunction } from "express";
-import { CustomAPIError } from "@/utils/error";
+import { CustomAPIError, UnprocessableEntityError } from "@/utils/error";
 
 const errorHandler = (
-  error: CustomAPIError | Error,
+  error: CustomAPIError | UnprocessableEntityError | Error,
   req: Request,
   res: Response,
   next: NextFunction
@@ -17,9 +17,17 @@ const errorHandler = (
     error: error.message || "Something went wrong, please try again later",
   };
 
+  if (error instanceof UnprocessableEntityError) {
+    customError = {
+      statusCode: error.statusCode,
+      status: "fail",
+      error: error.errors,
+    };
+  }
+
   res
     .status(customError.statusCode)
-    .json({ status: customError.error, error: customError.error });
+    .json({ status: customError.status, error: customError.error });
 };
 
 export default errorHandler;
