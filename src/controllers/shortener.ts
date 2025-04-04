@@ -5,7 +5,7 @@ import { customAlphabet } from "nanoid";
 import db from "@/database/db";
 import characters from "@/utils/constants/characters";
 
-const generateURL = async (req: Request, res: Response) => {
+const generateShortURL = async (req: Request, res: Response) => {
   const nanoid = customAlphabet(characters, 9);
 
   const uniqueCode = nanoid().toString();
@@ -28,4 +28,4 @@ const getOriginalURL = async (req: Request, res: Response) => {
   res.status(StatusCodes.MOVED_TEMPORARILY).redirect("/dummy_url");
 };
 
-export { generateURL, getOriginalURL };
+export { generateShortURL, getOriginalURL };

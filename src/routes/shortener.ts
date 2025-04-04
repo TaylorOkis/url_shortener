@@ -1,6 +1,6 @@
 import express from "express";
 
-import { generateURL, getOriginalURL } from "@/controllers/shortener";
+import { generateShortURL, getOriginalURL } from "@/controllers/shortener";
 import {
   generateURLValidator,
   getOriginalURLValidator,
@@ -19,7 +19,7 @@ shortenRouter.post(
   "/shorten",
   generateURLValidator,
   validationMiddleWare,
-  generateURL
+  generateShortURL
 );
 
 export default shortenRouter;
