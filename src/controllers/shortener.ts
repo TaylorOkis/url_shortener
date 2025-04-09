@@ -44,6 +44,7 @@ const getOriginalURL = async (req: Request, res: Response) => {
       shortUrl: shortUrl,
     },
     select: {
+      id: true,
       longUrl: true,
     },
   });
@@ -51,6 +52,13 @@ const getOriginalURL = async (req: Request, res: Response) => {
   if (!existingUrl) {
     throw new NotFoundError("short url was not found");
   }
+
+  console.log(existingUrl.id);
+
+  await db.url.update({
+    where: { id: existingUrl.id },
+    data: { clicks: { increment: 1 } },
+  });
 
   const longUrl = he.decode(existingUrl.longUrl);
 
