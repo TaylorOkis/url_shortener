@@ -6,6 +6,9 @@ import he from "he";
 import db from "@/database/db";
 import characters from "@/utils/constants/characters";
 import { BadRequestError, NotFoundError } from "@/utils/error";
+import CustomRequest from "@/types/types";
+import getIpInfo from "@/utils/IP/getIpInfo";
+import isLocalIPAddress from "@/utils/IP/localIP";
 
 const generateShortURL = async (req: Request, res: Response) => {
   const longUrl = req.body.long_url;
@@ -38,8 +41,10 @@ const generateShortURL = async (req: Request, res: Response) => {
   });
 };
 
-const getOriginalURL = async (req: Request, res: Response) => {
+const getOriginalURL = async (req: CustomRequest, res: Response) => {
   const shortCode = req.params.short_code;
+  const ip = req.client?.clientIp;
+  console.log(ip);
 
   const existingUrl = await db.shortenedURL.findUnique({
     where: {
@@ -53,6 +58,16 @@ const getOriginalURL = async (req: Request, res: Response) => {
 
   if (!existingUrl) {
     throw new NotFoundError("short url was not found");
+  }
+
+  // Click event recording.
+
+  // const ipinfo = await getIpInfo("8.8.8.8");
+  // console.log(ipinfo);
+
+  if (ip && !isLocalIPAddress(ip)) {
+    const ipinfo = await getIpInfo("8.8.8.8");
+    console.log(ipinfo);
   }
 
   await db.shortenedURL.update({

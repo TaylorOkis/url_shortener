@@ -6,6 +6,7 @@ import {
   getOriginalURLValidator,
 } from "@/utils/validator/validators";
 import validationMiddleWare from "@/middlewares/validation";
+import logIPMiddleware from "@/middlewares/logIP";
 
 const shortenRouter = express.Router();
 
@@ -13,6 +14,7 @@ shortenRouter.get(
   "/:short_code",
   getOriginalURLValidator,
   validationMiddleWare,
+  logIPMiddleware,
   getOriginalURL
 );
 shortenRouter.post(
