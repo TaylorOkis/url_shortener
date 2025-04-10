@@ -69,8 +69,6 @@ const getOriginalURL = async (req: CustomRequest, res: Response) => {
     ipInfo = await getIpInfo(ip!);
   }
 
-  ipInfo = await getIpInfo("8.8.8.8");
-
   const { browserEnum, deviceEnum, osEnum } = getUserAgentData(userAgent);
 
   await db.$transaction(async (tx) => {
