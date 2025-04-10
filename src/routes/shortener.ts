@@ -10,7 +10,7 @@ import validationMiddleWare from "@/middlewares/validation";
 const shortenRouter = express.Router();
 
 shortenRouter.get(
-  "/:short_url",
+  "/:short_code",
   getOriginalURLValidator,
   validationMiddleWare,
   getOriginalURL

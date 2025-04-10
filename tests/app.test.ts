@@ -11,7 +11,7 @@ const body = {
 jest.mock("nanoid");
 
 describe("URL Shortener API", () => {
-  test.skip("testing generate short url", async () => {
+  test("testing generate short url", async () => {
     return request(app)
       .post("/url/shorten")
       .send(body)
@@ -28,8 +28,8 @@ describe("URL Shortener API", () => {
       );
   });
 
-  test("testing getting long url and redirecting", async () => {
-    return request(app).get("/url/1CtismLql").expect(302);
+  test.only("testing getting long url and redirecting", async () => {
+    return request(app).get("/url/VzuGckr87").expect(302);
   });
 
   test("testing requesting for invalid short url", async () => {

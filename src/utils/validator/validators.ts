@@ -5,7 +5,7 @@ const generateURLValidator = [
 ];
 
 const getOriginalURLValidator = [
-  param("short_url", "short url has to be included").exists().escape(),
+  param("short_code", "short url has to be included").exists().escape(),
 ];
 
 export { generateURLValidator, getOriginalURLValidator };

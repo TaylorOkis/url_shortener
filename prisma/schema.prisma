@@ -8,12 +8,91 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Url {
-  id         String    @id @default(uuid())
-  longUrl    String    @unique
-  shortUrl   String    @unique
-  clicks     Int       @default(0)
-  expiresAt  DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+enum Browser {
+  CHROME
+  FIREFOX
+  SAFARI
+  EDGE
+  OPERA
+  OTHER
 }
+
+enum OS {
+  WINDOWS
+  MACOS
+  LINUX
+  IOS
+  ANDROID
+  OTHER
+}
+
+enum DeviceType {
+  MOBILE
+  TABLET
+  DESKTOP
+  OTHER
+}
+
+
+model User {
+  id              String     @id  @default(uuid())
+  email           String     @unique
+  passwordHash    String
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  emailVerified   Boolean    @default(false)
+
+  ShortenedURL    ShortenedURL[]
+
+  @@index([email, createdAt])
+}
+
+
+model ShortenedURL {
+  id          String     @id @default(uuid())
+  shortCode   String     @unique
+  longUrl     String
+  expiresAt   DateTime?
+  enabled     Boolean    @default(true)
+  clickCount  Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  userId      String? 
+  user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ClickEvent  ClickEvent[]
+
+  @@index([shortCode])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([expiresAt])
+  @@index([clickCount])
+}
+
+
+model ClickEvent {
+  id          String         @id  @default(uuid())
+  timeStamp   DateTime       @default(now())
+  referrer    String?
+  country     String?
+  city        String?
+  browser     Browser?
+  os          OS?
+  deviceType  DeviceType?
+  ipAddress   String?
+
+  shortUrlId  String
+  shortUrl    ShortenedURL   @relation(fields: [shortUrlId], references: [id])
+
+  @@index([shortUrlId])
+  @@index([timeStamp])
+  @@index([country])
+  @@index([browser])
+  @@index([os])
+  @@index([deviceType])
+
+  @@index([shortUrlId, timeStamp])
+}
+
+
+

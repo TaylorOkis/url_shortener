@@ -9,23 +9,25 @@ import { BadRequestError, NotFoundError } from "@/utils/error";
 
 const generateShortURL = async (req: Request, res: Response) => {
   const longUrl = req.body.long_url;
+  const expiresAt = req.body?.expiresAt ? new Date(req.body.expiresAt) : null;
 
-  const existingLongUrl = await db.url.findUnique({
-    where: { longUrl: longUrl },
+  const existingLongUrl = await db.shortenedURL.findFirst({
+    where: { AND: [{ longUrl: longUrl }, { enabled: true }] },
   });
 
   if (existingLongUrl) {
-    throw new BadRequestError("Long url already exists");
+    throw new BadRequestError("Long url already exists and active");
   }
 
   const nanoid = customAlphabet(characters, 9);
 
   const uniqueCode = nanoid().toString();
 
-  await db.url.create({
+  await db.shortenedURL.create({
     data: {
       longUrl: longUrl,
-      shortUrl: uniqueCode,
+      shortCode: uniqueCode,
+      expiresAt: expiresAt,
     },
   });
 
@@ -37,11 +39,11 @@ const generateShortURL = async (req: Request, res: Response) => {
 };
 
 const getOriginalURL = async (req: Request, res: Response) => {
-  const shortUrl = req.params.short_url;
+  const shortCode = req.params.short_code;
 
-  const existingUrl = await db.url.findUnique({
+  const existingUrl = await db.shortenedURL.findUnique({
     where: {
-      shortUrl: shortUrl,
+      shortCode,
     },
     select: {
       id: true,
@@ -53,11 +55,9 @@ const getOriginalURL = async (req: Request, res: Response) => {
     throw new NotFoundError("short url was not found");
   }
 
-  console.log(existingUrl.id);
-
-  await db.url.update({
+  await db.shortenedURL.update({
     where: { id: existingUrl.id },
-    data: { clicks: { increment: 1 } },
+    data: { clickCount: { increment: 1 } },
   });
 
   const longUrl = he.decode(existingUrl.longUrl);
