@@ -1,6 +1,4 @@
 const isLocalIPAddress = (ip: string): boolean => {
-  console.log("ip address: ", ip);
-
   return (
     ip === "::1" ||
     ip.startsWith("127.") ||
