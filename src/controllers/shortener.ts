@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { customAlphabet } from "nanoid";
-import { UAParser } from "ua-parser-js";
 import he from "he";
 
 import db from "@/database/db";
@@ -10,7 +9,6 @@ import { BadRequestError, NotFoundError } from "@/utils/error";
 import CustomRequest from "@/types/types";
 import getIpInfo from "@/utils/IP/getIpInfo";
 import isLocalIPAddress from "@/utils/IP/localIP";
-import { Browser, DeviceType, OS } from "@prisma/client";
 import getUserAgentData from "@/utils/IP/user-agent-data";
 
 const generateShortURL = async (req: Request, res: Response) => {
