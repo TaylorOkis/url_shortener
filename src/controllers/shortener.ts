@@ -4,6 +4,7 @@ import { customAlphabet } from "nanoid";
 import he from "he";
 
 import db from "@/database/db";
+import redisClient from "@/database/redisDB";
 import characters from "@/utils/constants/characters";
 import { BadRequestError, NotFoundError } from "@/utils/error";
 import CustomRequest from "@/types/types";
@@ -46,19 +47,32 @@ const getOriginalURL = async (req: CustomRequest, res: Response) => {
   const shortCode = req.params.short_code;
   const ip = req.client?.clientIp;
   const userAgent = req.get("user-agent");
+  let existingUrl = null;
 
-  const existingUrl = await db.shortenedURL.findUnique({
-    where: {
-      shortCode,
-    },
-    select: {
-      id: true,
-      longUrl: true,
-    },
-  });
+  const key = "shorturl:" + shortCode;
+  const value = await redisClient.get(key);
 
-  if (!existingUrl) {
-    throw new NotFoundError("short url was not found");
+  if (value) {
+    existingUrl = JSON.parse(value);
+  } else {
+    existingUrl = await db.shortenedURL.findUnique({
+      where: {
+        shortCode,
+      },
+      select: {
+        id: true,
+        longUrl: true,
+        expiresAt: true,
+      },
+    });
+
+    if (!existingUrl) {
+      throw new NotFoundError("short url was not found");
+    }
+
+    await redisClient.set(key, JSON.stringify(existingUrl), {
+      EX: 300,
+    });
   }
 
   let ipInfo = {} as any;
@@ -90,7 +104,8 @@ const getOriginalURL = async (req: CustomRequest, res: Response) => {
 
   const longUrl = he.decode(existingUrl.longUrl);
 
-  res.status(StatusCodes.MOVED_TEMPORARILY).redirect(longUrl);
+  res.status(StatusCodes.OK).json({ status: "success", message: longUrl });
+  // res.status(StatusCodes.MOVED_TEMPORARILY).redirect(longUrl);
 };
 
 export { generateShortURL, getOriginalURL };
