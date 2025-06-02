@@ -8,7 +8,7 @@ declare global {
 const redisClient: RedisClientType =
   globalThis.redis ||
   createClient({
-    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+    url: process.env.REDIS_URL,
   });
 
 if (!globalThis.redis) globalThis.redis = redisClient;
