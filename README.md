@@ -1129,8 +1129,6 @@ This **URL Shortener** repository demonstrates:
   - Migrations (`prisma migrate dev --name init`) generate the corresponding SQL table in PostgreSQL.
   - The generated Prisma Client (in `node_modules/@prisma/client`) is used by the model functions.
 
-Overall, this repository is a strong portfolio piece because it covers:
-
 1. **Full TypeScript Back‐End**: from schema to production.
 2. **Industry Standard Best Practices**:
 
@@ -1143,5 +1141,3 @@ Overall, this repository is a strong portfolio piece because it covers:
 4. **Containerization**: production‐ready Dockerfile with multi‐stage builds.
 
 Anyone evaluating this code can immediately see your ability to design and implement a scalable, secure, and maintainable service. You’ve shown command over database modeling (Prisma), server architecture (Express + TypeScript), automated testing (Jest + Supertest), and DevOps (Docker).
-
-Feel free to use (or adapt) any of these explanations, code snippets, or structural notes directly in your own **README.md** or portfolio.
